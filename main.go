@@ -2,21 +2,21 @@ package main
 
 import (
 	"encoding/json"
-	"io"
 	"log"
+    "fmt"
 	"net/http"
 )
 
-type BlockResponse struct {
-	Result string `json:"result"`
-}
-type CreatePrivateRoomResponse struct {
-	PrivateID string `json:"private_id"`
-}
-type JoinRoomResponse struct {
-	ConferenceID string `json:"conference_id"`
-	Host         string `json:"host"`
-	Port         int    `json:"port"`
+type JsonResponse map[string]interface{}
+
+func (r JsonResponse) String() (s string) {
+    dumps, err := json.Marshal(r)
+        if err != nil {
+            s = ""
+                return
+        }
+    s = string(dumps)
+        return
 }
 
 func RoomView(w http.ResponseWriter, req *http.Request) {
@@ -25,23 +25,19 @@ func RoomView(w http.ResponseWriter, req *http.Request) {
 	token := req.FormValue("token")
 	log.Printf("url: %s, token: %s", room_url, token)
 	if req.Method == "GET" {
+		// join room
 		private_id := req.FormValue("private_id")
 		log.Printf("private_id: %s", private_id)
-		// join room
-		res := &JoinRoomResponse{
-			ConferenceID: "23423423ABSDFSDFR/SDF",
-			Host:         "live.rounds.com",
-			Port:         50000,
-		}
-		jres, _ := json.Marshal(res)
-		io.WriteString(w, string(jres))
+        fmt.Fprint(w, JsonResponse{
+            "conference_id": "23423423ABSDFSDFR/SDF",
+            "host": "live.rounds.com",
+            "port": 50000,
+            })
 	} else if req.Method == "POST" {
 		// create private room
-		res := &CreatePrivateRoomResponse{
-			PrivateID: "23423423ABSDFSDFR/SDF",
-		}
-		jres, _ := json.Marshal(res)
-		io.WriteString(w, string(jres))
+        fmt.Fprint(w, JsonResponse{
+            "private_id": "23423423ABSDFSDFR/SDF",
+            })
 	} else {
 		http.NotFound(w, req)
 	}
@@ -53,12 +49,9 @@ func BlockView(w http.ResponseWriter, req *http.Request) {
 	offender := req.FormValue("offender")
 	conference_id := req.FormValue("conference_id")
 	log.Printf("offender: %s, token: %s, conference_id", offender, token, conference_id)
-
-	res := &BlockResponse{
-		Result: "ok",
-	}
-	jres, _ := json.Marshal(res)
-	io.WriteString(w, string(jres))
+    fmt.Fprint(w, JsonResponse{
+        "result": "ok",
+        })
 }
 
 func HideView(w http.ResponseWriter, req *http.Request) {
