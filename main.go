@@ -2,21 +2,21 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
-    "fmt"
 	"net/http"
 )
 
 type JsonResponse map[string]interface{}
 
 func (r JsonResponse) String() (s string) {
-    dumps, err := json.Marshal(r)
-        if err != nil {
-            s = ""
-                return
-        }
-    s = string(dumps)
-        return
+	dumps, err := json.Marshal(r)
+	if err != nil {
+		s = ""
+		return
+	}
+	s = string(dumps)
+	return
 }
 
 func RoomView(w http.ResponseWriter, req *http.Request) {
@@ -28,16 +28,16 @@ func RoomView(w http.ResponseWriter, req *http.Request) {
 		// join room
 		private_id := req.FormValue("private_id")
 		log.Printf("private_id: %s", private_id)
-        fmt.Fprint(w, JsonResponse{
-            "conference_id": "23423423ABSDFSDFR/SDF",
-            "host": "live.rounds.com",
-            "port": 50000,
-            })
+		fmt.Fprint(w, JsonResponse{
+			"conference_id": "23423423ABSDFSDFR/SDF",
+			"host":          "live.rounds.com",
+			"port":          50000,
+		})
 	} else if req.Method == "POST" {
 		// create private room
-        fmt.Fprint(w, JsonResponse{
-            "private_id": "23423423ABSDFSDFR/SDF",
-            })
+		fmt.Fprint(w, JsonResponse{
+			"private_id": "23423423ABSDFSDFR/SDF",
+		})
 	} else {
 		http.NotFound(w, req)
 	}
@@ -49,9 +49,9 @@ func BlockView(w http.ResponseWriter, req *http.Request) {
 	offender := req.FormValue("offender")
 	conference_id := req.FormValue("conference_id")
 	log.Printf("offender: %s, token: %s, conference_id", offender, token, conference_id)
-    fmt.Fprint(w, JsonResponse{
-        "result": "ok",
-        })
+	fmt.Fprint(w, JsonResponse{
+		"result": "ok",
+	})
 }
 
 func HideView(w http.ResponseWriter, req *http.Request) {
