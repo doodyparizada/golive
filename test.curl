@@ -1,0 +1,4 @@
+curl "localhost:12345/room?token=223423&room_url=doody&private_id=4234234"
+curl "localhost:12345/room?token=22342" -d"room_url=doody"
+curl "localhost:12345/hide?token=223423&offender=453543&conference_id=SDFSDFSDFSD"
+curl "localhost:12345/block?token=223423&offender=453543&conference_id=SDFSDFSDFSD"
